@@ -24,6 +24,41 @@ function initIcons() {
     }
 }
 
+// Helper: Relative Time
+function formatRelativeTime(dateString) {
+    const now = new Date();
+    const past = new Date(dateString);
+    const diffInSeconds = Math.floor((now - past) / 1000);
+    
+    const units = [
+        { name: 'yr', seconds: 31536000 },
+        { name: 'mo', seconds: 2592000 },
+        { name: 'day', seconds: 86400 },
+        { name: 'hr', seconds: 3600 },
+        { name: 'min', seconds: 60 },
+        { name: 'sec', seconds: 1 }
+    ];
+    
+    for (const unit of units) {
+        if (diffInSeconds >= unit.seconds) {
+            const count = Math.floor(diffInSeconds / unit.seconds);
+            return `${count} ${unit.name}${count !== 1 ? 's' : ''} ago`;
+        }
+    }
+    return 'Just now';
+}
+
+// Helper: Copy to Clipboard
+async function copyToClipboard(text) {
+    try {
+        await navigator.clipboard.writeText(text);
+        showToast('Link copied to clipboard!', 'clipboard-check');
+    } catch (err) {
+        console.error('Failed to copy: ', err);
+        showToast('Failed to copy link.', 'alert-circle');
+    }
+}
+
 // Fetch Externals
 async function fetchExternals() {
     try {
@@ -38,7 +73,7 @@ async function fetchExternals() {
         renderExternals(allExternals);
     } catch (error) {
         console.error('Error fetching externals:', error.message);
-        showToast('Error loading data. Check console.', 'alert-circle');
+        showToast('Error loading resources.', 'alert-triangle');
     }
 }
 
@@ -60,24 +95,44 @@ function renderExternals(items) {
     items.forEach((item, index) => {
         const card = document.createElement('div');
         card.className = 'external-card animate-fade-in';
-        card.style.animationDelay = `${index * 0.05}s`;
+        card.style.animationDelay = `${index * 0.1}s`;
         
         card.innerHTML = `
-            <div class="card-icon">
-                <i data-lucide="file-code"></i>
+            <div class="flex items-start justify-between">
+                <div class="card-icon">
+                    <i data-lucide="folder-code"></i>
+                </div>
+                <button class="copy-btn" data-link="${item.drive_link}" title="Copy Link">
+                    <i data-lucide="copy" class="w-4 h-4"></i>
+                </button>
             </div>
             <div>
                 <h3 class="card-title">${escapeHTML(item.name)}</h3>
-                <p class="text-slate-500 text-sm mt-1">Uploaded ${new Date(item.created_at).toLocaleDateString()}</p>
+                <div class="card-meta">
+                    <div class="flex items-center gap-1.5">
+                        <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                        <span>${formatRelativeTime(item.created_at)}</span>
+                    </div>
+                </div>
             </div>
             <div class="card-footer">
                 <a href="${item.drive_link}" target="_blank" class="drive-link-btn">
-                    <i data-lucide="external-link"></i>
-                    <span>View Drive</span>
+                    <span>Access Drive</span>
+                    <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
                 </a>
-                <span class="text-slate-500 text-xs">Shared publically</span>
+                <div class="flex items-center gap-1.5 text-slate-500 text-xs font-medium">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                    Public
+                </div>
             </div>
         `;
+        
+        // Add copy event listener
+        const copyBtn = card.querySelector('.copy-btn');
+        copyBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            copyToClipboard(item.drive_link);
+        });
         
         externalsGrid.appendChild(card);
     });
@@ -94,7 +149,7 @@ async function handleUpload(e) {
     const submitBtn = document.getElementById('submit-btn');
     
     submitBtn.disabled = true;
-    submitBtn.innerHTML = '<i data-lucide="loader-2" class="animate-spin w-5 h-5"></i><span>Uploading...</span>';
+    submitBtn.innerHTML = '<i data-lucide="loader-2" class="animate-spin w-5 h-5"></i><span>Finalizing...</span>';
     initIcons();
 
     try {
@@ -105,38 +160,42 @@ async function handleUpload(e) {
 
         if (error) throw error;
 
-        showToast('Successfully added!', 'check-circle');
+        showToast('Resource published!', 'check');
         toggleModal(false);
         uploadForm.reset();
         
-        // Update local list manually for immediate feedback
         if (data) {
             allExternals = [data[0], ...allExternals];
             renderExternals(allExternals);
         }
     } catch (error) {
         console.error('Error uploading:', error.message);
-        showToast('Failed to upload. Try again.', 'x-circle');
+        showToast('Publication failed.', 'alert-circle');
     } finally {
         submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span>Upload Repository</span><i data-lucide="send" class="w-5 h-5"></i>';
+        submitBtn.innerHTML = '<span>Publish to Hub</span><i data-lucide="plus-circle" class="w-5 h-5"></i>';
         initIcons();
     }
 }
 
 // Search Logic
+let searchTimeout;
 function handleSearch(e) {
-    const term = e.target.value.toLowerCase();
-    const filtered = allExternals.filter(item => 
-        item.name.toLowerCase().includes(term)
-    );
-    renderExternals(filtered);
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        const term = e.target.value.toLowerCase();
+        const filtered = allExternals.filter(item => 
+            item.name.toLowerCase().includes(term)
+        );
+        renderExternals(filtered);
+    }, 150);
 }
 
 // Modal Logic
 function toggleModal(show) {
     if (show) {
         uploadModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
         setTimeout(() => {
             modalContainer.classList.add('show');
             modalContainer.classList.remove('scale-95', 'opacity-0');
@@ -144,6 +203,7 @@ function toggleModal(show) {
     } else {
         modalContainer.classList.remove('show');
         modalContainer.classList.add('scale-95', 'opacity-0');
+        document.body.style.overflow = '';
         setTimeout(() => {
             uploadModal.classList.add('hidden');
         }, 300);
@@ -157,12 +217,14 @@ function showToast(message, iconName) {
     icon.setAttribute('data-lucide', iconName);
     initIcons();
     
+    toast.style.pointerEvents = 'auto';
     toast.classList.add('show');
     toast.classList.remove('opacity-0', 'translate-y-10');
     
     setTimeout(() => {
         toast.classList.remove('show');
         toast.classList.add('opacity-0', 'translate-y-10');
+        toast.style.pointerEvents = 'none';
     }, 3000);
 }
 
@@ -192,8 +254,6 @@ function setupRealtime() {
                 table: 'externals',
             },
             (payload) => {
-                console.log('New external added:', payload.new);
-                // Only add if not already in list (avoid duplicates from manual add)
                 if (!allExternals.find(item => item.id === payload.new.id)) {
                     allExternals = [payload.new, ...allExternals];
                     renderExternals(allExternals);
@@ -203,18 +263,17 @@ function setupRealtime() {
         .subscribe();
 }
 
-// Init
+// Scroll Effects
 window.addEventListener('scroll', () => {
     const nav = document.querySelector('nav');
-    if (window.scrollY > 20) {
-        nav.classList.add('py-2');
-        nav.classList.remove('py-4');
+    if (window.scrollY > 40) {
+        nav.classList.add('scrolled');
     } else {
-        nav.classList.remove('py-2');
-        nav.classList.add('py-4');
+        nav.classList.remove('scrolled');
     }
 });
 
+// Init
 initIcons();
 fetchExternals();
 setupRealtime();

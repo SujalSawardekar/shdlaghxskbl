@@ -17,110 +17,138 @@
     <!-- Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-navy text-white min-h-screen">
+<body class="bg-navy-950 text-white min-h-screen">
+    <div class="bg-glow"></div>
+    
     <div id="app">
         <!-- Navigation -->
-        <nav class="sticky top-0 z-50 glass border-b border-white/10 backdrop-blur-lg">
-            <div class="container mx-auto px-6 h-20 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-amber flex items-center justify-center shadow-amber/20 shadow-lg">
-                        <i data-lucide="code-2" class="text-navy w-6 h-6"></i>
+        <nav class="fixed top-0 left-0 right-0 z-50 h-24 flex items-center">
+            <div class="container mx-auto px-6 flex items-center justify-between w-full">
+                <div class="flex items-center gap-3 group cursor-pointer">
+                    <div class="w-12 h-12 rounded-2xl bg-amber-400 flex items-center justify-center shadow-amber-500/20 shadow-xl transition-all group-hover:rotate-12">
+                        <i data-lucide="code-2" class="text-navy-950 w-7 h-7"></i>
                     </div>
-                    <span class="text-2xl font-outfit font-bold tracking-tight">External<span class="text-amber">Hub</span></span>
+                    <span class="text-2xl font-outfit font-bold tracking-tight">External<span class="text-amber-400">Hub</span></span>
                 </div>
                 
-                <button id="open-upload-modal" class="btn-primary flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold transition-all">
-                    <i data-lucide="plus" class="w-5 h-5"></i>
-                    <span>Share External</span>
+                <button id="open-upload-modal" class="btn-primary">
+                    <i data-lucide="share-2" class="w-5 h-5"></i>
+                    <span>Share Content</span>
                 </button>
             </div>
         </nav>
 
         <!-- Hero Section -->
-        <section class="py-16 md:py-24 container mx-auto px-6 text-center">
-            <h1 class="text-5xl md:text-7xl font-outfit font-extrabold mb-6 leading-tight">
-                Access Code for Every <span class="bg-gradient-to-r from-amber to-orange-500 bg-clip-text text-transparent">External</span>
+        <section class="pt-40 pb-20 container mx-auto px-6 text-center">
+            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400 text-sm font-semibold mb-8 animate-fade-in">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                Sharing simplified for developers
+            </span>
+            
+            <h1 class="text-6xl md:text-8xl font-outfit font-extrabold mb-8 leading-[1.1] animate-fade-in" style="animation-delay: 0.1s">
+                Your External <br> 
+                <span class="bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">Code Library</span>
             </h1>
-            <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-12">
-                Upload your drive links and make them accessible to everyone. Search, find, and start working in seconds.
+            
+            <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-16 animate-fade-in" style="animation-delay: 0.2s">
+                Submit and discover Google Drive links for your external projects. Built for speed, managed with precision.
             </p>
 
             <!-- Search Bar -->
-            <div class="max-w-xl mx-auto relative group">
-                <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-amber transition-colors">
-                    <i data-lucide="search" class="w-5 h-5"></i>
+            <div class="search-container animate-fade-in" style="animation-delay: 0.3s">
+                <div class="absolute inset-y-0 left-6 flex items-center pointer-events-none text-slate-500">
+                    <i data-lucide="search" class="w-6 h-6"></i>
                 </div>
                 <input 
                     type="text" 
                     id="search-input" 
                     placeholder="Search externals by name..." 
-                    class="w-full bg-slate-900/50 border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-lg focus:outline-none focus:border-amber/50 focus:ring-4 focus:ring-amber/10 transition-all backdrop-blur-sm"
+                    class="input-field search-input-large"
                 >
             </div>
         </section>
 
         <!-- Main Content -->
-        <main class="container mx-auto px-6 pb-24">
-            <div id="externals-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <main class="container mx-auto px-6 pb-32">
+            <div id="externals-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Cards will be injected here -->
                 <div id="loading-skeleton" class="col-span-full py-20 flex flex-col items-center justify-center text-slate-500">
-                    <div class="animate-spin mb-4">
-                        <i data-lucide="loader-2" class="w-10 h-10"></i>
+                    <div class="animate-spin mb-6">
+                        <i data-lucide="loader-2" class="w-12 h-12 text-amber-400"></i>
                     </div>
-                    <p>Loading externals...</p>
+                    <p class="text-lg font-medium">Synchronizing resources...</p>
                 </div>
             </div>
             
-            <div id="no-results" class="hidden py-20 text-center text-slate-500">
-                <i data-lucide="folder-search" class="w-16 h-16 mx-auto mb-4 opacity-20"></i>
-                <p class="text-xl">No externals found matching your search.</p>
+            <div id="no-results" class="hidden py-32 text-center">
+                <div class="w-24 h-24 rounded-full bg-navy-800 flex items-center justify-center mx-auto mb-6">
+                    <i data-lucide="search-x" class="w-12 h-12 text-slate-500"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-2">No matching externals</h3>
+                <p class="text-slate-400">Try adjusting your search or share a new one.</p>
             </div>
         </main>
 
         <!-- Footer -->
-        <footer class="border-t border-white/5 py-12 text-center text-slate-500">
-            <p>&copy; 2026 External Hub. Managed with precision.</p>
+        <footer class="border-t border-white/5 py-16 text-center text-slate-500">
+            <div class="container mx-auto px-6">
+                <div class="flex items-center justify-between flex-col md:flex-row gap-8">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="code-2" class="w-5 h-5 text-amber-400"></i>
+                        <span class="font-outfit font-bold text-white">ExternalHub</span>
+                    </div>
+                    <p class="text-sm">© 2026 External Hub. All rights reserved.</p>
+                    <div class="flex items-center gap-6">
+                        <a href="#" class="hover:text-amber-400 transition-colors">Privacy</a>
+                        <a href="#" class="hover:text-amber-400 transition-colors">Terms</a>
+                        <a href="#" class="hover:text-amber-400 transition-colors">Status</a>
+                    </div>
+                </div>
+            </div>
         </footer>
 
         <!-- Upload Modal -->
         <div id="upload-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
             <div class="flex items-center justify-center min-h-screen p-6">
-                <div class="fixed inset-0 bg-navy/80 backdrop-blur-sm" id="close-modal-overlay"></div>
+                <div class="fixed inset-0 modal-overlay" id="close-modal-overlay"></div>
                 
-                <div class="relative glass bg-slate-900 border border-white/10 rounded-3xl w-full max-w-lg p-8 shadow-2xl transition-all scale-95 opacity-0" id="modal-container">
-                    <div class="flex items-center justify-between mb-8">
-                        <h2 class="text-3xl font-outfit font-bold">Share Content</h2>
-                        <button id="close-upload-modal" class="text-slate-400 hover:text-white transition-colors">
+                <div class="relative glass bg-navy-900 border border-white/10 rounded-[32px] w-full max-w-lg p-10 shadow-3xl transition-all scale-95 opacity-0" id="modal-container">
+                    <div class="flex items-center justify-between mb-10">
+                        <div>
+                            <h2 class="text-3xl font-outfit font-bold mb-1">Share Code</h2>
+                            <p class="text-slate-500">Provide a name and Google Drive link.</p>
+                        </div>
+                        <button id="close-upload-modal" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all">
                             <i data-lucide="x" class="w-6 h-6"></i>
                         </button>
                     </div>
 
-                    <form id="upload-form" class="space-y-6">
-                        <div class="space-y-2">
-                            <label for="external-name" class="text-sm font-semibold text-slate-400 uppercase tracking-wider">External Name</label>
+                    <form id="upload-form" class="space-y-8">
+                        <div class="input-group">
+                            <label for="external-name" class="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Resource Name</label>
                             <input 
                                 type="text" 
                                 id="external-name" 
                                 required 
-                                placeholder="e.g. Operating Systems"
-                                class="w-full bg-navy border border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:border-amber/50 focus:ring-4 focus:ring-amber/5 transition-all"
+                                placeholder="e.g. System Design Docs"
+                                class="input-field"
                             >
                         </div>
                         
-                        <div class="space-y-2">
-                            <label for="drive-link" class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Drive Link</label>
+                        <div class="input-group">
+                            <label for="drive-link" class="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Google Drive URL</label>
                             <input 
                                 type="url" 
                                 id="drive-link" 
                                 required 
                                 placeholder="https://drive.google.com/..."
-                                class="w-full bg-navy border border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:border-amber/50 focus:ring-4 focus:ring-amber/5 transition-all"
+                                class="input-field"
                             >
                         </div>
 
-                        <button type="submit" id="submit-btn" class="w-full bg-amber text-navy font-bold py-4 rounded-xl hover:bg-amber/90 active:scale-95 transition-all flex items-center justify-center gap-2">
-                            <span>Upload Repository</span>
-                            <i data-lucide="send" class="w-5 h-5"></i>
+                        <button type="submit" id="submit-btn" class="w-full btn-primary h-14 justify-center text-lg">
+                            <span>Publish to Hub</span>
+                            <i data-lucide="plus-circle" class="w-5 h-5"></i>
                         </button>
                     </form>
                 </div>
@@ -128,9 +156,11 @@
         </div>
         
         <!-- Toast Notification -->
-        <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] px-6 py-3 rounded-full bg-amber text-navy font-bold shadow-2xl flex items-center gap-2 transition-all opacity-0 translate-y-10 pointer-events-none">
-            <i id="toast-icon" data-lucide="check-circle" class="w-5 h-5"></i>
-            <span id="toast-message">Linked successfully!</span>
+        <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] px-8 py-4 rounded-2xl glass border-amber-400/20 text-white font-semibold shadow-3xl flex items-center gap-3 transition-all opacity-0 translate-y-10 pointer-events-none">
+            <div class="w-8 h-8 rounded-full bg-amber-400 flex items-center justify-center text-navy-950">
+                <i id="toast-icon" data-lucide="check" class="w-5 h-5"></i>
+            </div>
+            <span id="toast-message">Action successful!</span>
         </div>
     </div>
     <script type="module" src="/src/main.js"></script>
