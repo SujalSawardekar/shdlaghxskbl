@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>External Hub | Share & Access Code</title>
+    
+    <!-- SEO -->
+    <meta name="description" content="A platform to share and access external code links via Google Drive. Simple, fast, and real-time.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-navy text-white min-h-screen">
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="sticky top-0 z-50 glass border-b border-white/10 backdrop-blur-lg">
+            <div class="container mx-auto px-6 h-20 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-amber flex items-center justify-center shadow-amber/20 shadow-lg">
+                        <i data-lucide="code-2" class="text-navy w-6 h-6"></i>
+                    </div>
+                    <span class="text-2xl font-outfit font-bold tracking-tight">External<span class="text-amber">Hub</span></span>
+                </div>
+                
+                <button id="open-upload-modal" class="btn-primary flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold transition-all">
+                    <i data-lucide="plus" class="w-5 h-5"></i>
+                    <span>Share External</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="py-16 md:py-24 container mx-auto px-6 text-center">
+            <h1 class="text-5xl md:text-7xl font-outfit font-extrabold mb-6 leading-tight">
+                Access Code for Every <span class="bg-gradient-to-r from-amber to-orange-500 bg-clip-text text-transparent">External</span>
+            </h1>
+            <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-12">
+                Upload your drive links and make them accessible to everyone. Search, find, and start working in seconds.
+            </p>
+
+            <!-- Search Bar -->
+            <div class="max-w-xl mx-auto relative group">
+                <div class="absolute inset-y-0 left-5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-amber transition-colors">
+                    <i data-lucide="search" class="w-5 h-5"></i>
+                </div>
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="Search externals by name..." 
+                    class="w-full bg-slate-900/50 border border-white/10 rounded-2xl py-5 pl-14 pr-6 text-lg focus:outline-none focus:border-amber/50 focus:ring-4 focus:ring-amber/10 transition-all backdrop-blur-sm"
+                >
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-6 pb-24">
+            <div id="externals-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards will be injected here -->
+                <div id="loading-skeleton" class="col-span-full py-20 flex flex-col items-center justify-center text-slate-500">
+                    <div class="animate-spin mb-4">
+                        <i data-lucide="loader-2" class="w-10 h-10"></i>
+                    </div>
+                    <p>Loading externals...</p>
+                </div>
+            </div>
+            
+            <div id="no-results" class="hidden py-20 text-center text-slate-500">
+                <i data-lucide="folder-search" class="w-16 h-16 mx-auto mb-4 opacity-20"></i>
+                <p class="text-xl">No externals found matching your search.</p>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-white/5 py-12 text-center text-slate-500">
+            <p>&copy; 2026 External Hub. Managed with precision.</p>
+        </footer>
+
+        <!-- Upload Modal -->
+        <div id="upload-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
+            <div class="flex items-center justify-center min-h-screen p-6">
+                <div class="fixed inset-0 bg-navy/80 backdrop-blur-sm" id="close-modal-overlay"></div>
+                
+                <div class="relative glass bg-slate-900 border border-white/10 rounded-3xl w-full max-w-lg p-8 shadow-2xl transition-all scale-95 opacity-0" id="modal-container">
+                    <div class="flex items-center justify-between mb-8">
+                        <h2 class="text-3xl font-outfit font-bold">Share Content</h2>
+                        <button id="close-upload-modal" class="text-slate-400 hover:text-white transition-colors">
+                            <i data-lucide="x" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+
+                    <form id="upload-form" class="space-y-6">
+                        <div class="space-y-2">
+                            <label for="external-name" class="text-sm font-semibold text-slate-400 uppercase tracking-wider">External Name</label>
+                            <input 
+                                type="text" 
+                                id="external-name" 
+                                required 
+                                placeholder="e.g. Operating Systems"
+                                class="w-full bg-navy border border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:border-amber/50 focus:ring-4 focus:ring-amber/5 transition-all"
+                            >
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label for="drive-link" class="text-sm font-semibold text-slate-400 uppercase tracking-wider">Drive Link</label>
+                            <input 
+                                type="url" 
+                                id="drive-link" 
+                                required 
+                                placeholder="https://drive.google.com/..."
+                                class="w-full bg-navy border border-white/10 rounded-xl py-4 px-5 focus:outline-none focus:border-amber/50 focus:ring-4 focus:ring-amber/5 transition-all"
+                            >
+                        </div>
+
+                        <button type="submit" id="submit-btn" class="w-full bg-amber text-navy font-bold py-4 rounded-xl hover:bg-amber/90 active:scale-95 transition-all flex items-center justify-center gap-2">
+                            <span>Upload Repository</span>
+                            <i data-lucide="send" class="w-5 h-5"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Toast Notification -->
+        <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[200] px-6 py-3 rounded-full bg-amber text-navy font-bold shadow-2xl flex items-center gap-2 transition-all opacity-0 translate-y-10 pointer-events-none">
+            <i id="toast-icon" data-lucide="check-circle" class="w-5 h-5"></i>
+            <span id="toast-message">Linked successfully!</span>
+        </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
