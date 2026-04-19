@@ -128,7 +128,7 @@ body {
   background: rgba(251, 191, 36, 0.1);
   border-radius: 1rem;
   display: flex;
-  items-center justify-center;
+  align-items: center; justify-content: center;
   color: var(--amber);
 }
 
