@@ -24,7 +24,8 @@
         <!-- Navigation -->
         <nav class="fixed top-0 left-0 right-0 z-50 h-24 flex items-center">
             <div class="container mx-auto px-6 flex items-center justify-between w-full">
-                <div class="flex items-center gap-3 group cursor-pointer">
+                <!-- Brand Logo Group -->
+                <div class="flex items-center gap-3 group cursor-pointer transition-transform hover:scale-[1.02]">
                     <div class="w-12 h-12 rounded-2xl bg-amber-400 flex items-center justify-center shadow-amber-500/20 shadow-xl transition-all group-hover:rotate-12">
                         <i data-lucide="code-2" class="text-navy-950 w-7 h-7"></i>
                     </div>
@@ -54,7 +55,7 @@
                 Submit and discover Google Drive links for your external projects. Built for speed, managed with precision.
             </p>
 
-            <!-- Search Bar -->
+            <!-- Search Bar Container -->
             <div class="search-container animate-fade-in" style="animation-delay: 0.3s">
                 <div class="absolute inset-y-0 left-6 flex items-center pointer-events-none text-slate-500">
                     <i data-lucide="search" class="w-6 h-6"></i>
@@ -68,10 +69,10 @@
             </div>
         </section>
 
-        <!-- Main Content -->
+        <!-- Main Content (Grid) -->
         <main class="container mx-auto px-6 pb-32">
             <div id="externals-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Cards will be injected here -->
+                <!-- Cards will be injected here via main.js -->
                 <div id="loading-skeleton" class="col-span-full py-20 flex flex-col items-center justify-center text-slate-500">
                     <div class="animate-spin mb-6">
                         <i data-lucide="loader-2" class="w-12 h-12 text-amber-400"></i>
@@ -80,8 +81,9 @@
                 </div>
             </div>
             
-            <div id="no-results" class="hidden py-32 text-center">
-                <div class="w-24 h-24 rounded-full bg-navy-800 flex items-center justify-center mx-auto mb-6">
+            <!-- Empty State -->
+            <div id="no-results" class="hidden py-32 text-center animate-fade-in">
+                <div class="w-24 h-24 rounded-full bg-navy-800/50 flex items-center justify-center mx-auto mb-6 border border-white/5">
                     <i data-lucide="search-x" class="w-12 h-12 text-slate-500"></i>
                 </div>
                 <h3 class="text-2xl font-bold mb-2">No matching externals</h3>
@@ -90,18 +92,24 @@
         </main>
 
         <!-- Footer -->
-        <footer class="border-t border-white/5 py-16 text-center text-slate-500">
+        <footer class="border-t border-white/5 py-16 text-slate-500 bg-navy-950/50">
             <div class="container mx-auto px-6">
-                <div class="flex items-center justify-between flex-col md:flex-row gap-8">
-                    <div class="flex items-center gap-2">
-                        <i data-lucide="code-2" class="w-5 h-5 text-amber-400"></i>
-                        <span class="font-outfit font-bold text-white">ExternalHub</span>
+                <div class="flex flex-col md:flex-row items-center justify-between gap-10">
+                    <!-- Footer Brand -->
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10">
+                            <i data-lucide="code-2" class="text-amber-400 w-5 h-5"></i>
+                        </div>
+                        <span class="font-outfit font-bold text-white text-xl tracking-tight">External<span class="text-amber-400">Hub</span></span>
                     </div>
-                    <p class="text-sm">© 2026 External Hub. All rights reserved.</p>
-                    <div class="flex items-center gap-6">
-                        <a href="#" class="hover:text-amber-400 transition-colors">Privacy</a>
-                        <a href="#" class="hover:text-amber-400 transition-colors">Terms</a>
-                        <a href="#" class="hover:text-amber-400 transition-colors">Status</a>
+                    
+                    <p class="text-sm font-medium">© 2026 External Hub. Managed with precision.</p>
+                    
+                    <!-- Footer Links -->
+                    <div class="flex items-center gap-8">
+                        <a href="#" class="text-sm hover:text-amber-400 transition-colors">Privacy</a>
+                        <a href="#" class="text-sm hover:text-amber-400 transition-colors">Terms</a>
+                        <a href="#" class="text-sm hover:text-amber-400 transition-colors">Status</a>
                     </div>
                 </div>
             </div>
@@ -124,7 +132,7 @@
                     </div>
 
                     <form id="upload-form" class="space-y-8">
-                        <div class="input-group">
+                        <div class="flex flex-col gap-2">
                             <label for="external-name" class="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Resource Name</label>
                             <input 
                                 type="text" 
@@ -135,7 +143,7 @@
                             >
                         </div>
                         
-                        <div class="input-group">
+                        <div class="flex flex-col gap-2">
                             <label for="drive-link" class="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Google Drive URL</label>
                             <input 
                                 type="url" 
@@ -146,7 +154,7 @@
                             >
                         </div>
 
-                        <button type="submit" id="submit-btn" class="w-full btn-primary h-14 justify-center text-lg">
+                        <button type="submit" id="submit-btn" class="w-full btn-primary h-14 justify-center text-lg shadow-amber-500/10">
                             <span>Publish to Hub</span>
                             <i data-lucide="plus-circle" class="w-5 h-5"></i>
                         </button>
