@@ -64,6 +64,11 @@ async function handleDelete(id) {
             .eq('id', id);
 
         if (error) throw error;
+        
+        // Manual UI Update for immediate feedback
+        allExternals = allExternals.filter(item => item.id !== id);
+        renderExternals(allExternals);
+        
         showToast('Resource deleted.', 'trash-2');
     } catch (error) {
         console.error('Delete error:', error.message);
@@ -242,6 +247,20 @@ function escapeHTML(str) {
 
 if (uploadForm) uploadForm.addEventListener('submit', handleUpload);
 if (searchInput) searchInput.addEventListener('input', handleSearch);
+
+// Manual Modal Close Listener
+const closeModalBtn = document.getElementById('close-modal-btn');
+if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', () => {
+        if (uploadModal) {
+            try {
+                uploadModal.hidePopover();
+            } catch (e) {
+                uploadModal.style.display = 'none';
+            }
+        }
+    });
+}
 
 // Real-time Subscriptions
 function setupRealtime() {
