@@ -32,7 +32,7 @@
                     <span class="text-2xl font-outfit font-bold tracking-tight">External<span class="text-amber-400">Hub</span></span>
                 </div>
                 
-                <button id="open-upload-modal" class="btn-primary">
+                <button id="open-upload-modal" class="btn-primary" popovertarget="upload-modal">
                     <i data-lucide="share-2" class="w-5 h-5"></i>
                     <span>Share Content</span>
                 </button>
@@ -40,24 +40,26 @@
         </nav>
 
         <!-- Hero Section -->
-        <section class="pt-40 pb-20 container mx-auto px-6 text-center">
-            <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400 text-sm font-semibold mb-8 animate-fade-in">
-                <i data-lucide="sparkles" class="w-4 h-4"></i>
-                Sharing simplified for developers
-            </span>
-            
-            <h1 class="text-6xl md:text-8xl font-outfit font-extrabold mb-8 leading-[1.1] animate-fade-in" style="animation-delay: 0.1s">
-                Your External <br> 
-                <span class="bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">Code Library</span>
-            </h1>
-            
-            <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-16 animate-fade-in" style="animation-delay: 0.2s">
-                Submit and discover Google Drive links for your external projects. Built for speed, managed with precision.
-            </p>
+        <section class="pt-32 pb-16 container mx-auto px-6 text-center">
+            <div class="flex flex-col items-center">
+                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-400/10 border border-amber-400/20 text-amber-400 text-sm font-semibold mb-6 animate-fade-in">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                    Sharing simplified for developers
+                </span>
+                
+                <h1 class="text-6xl md:text-8xl font-outfit font-extrabold mb-6 leading-[1.1] animate-fade-in" style="animation-delay: 0.1s">
+                    Your External <br> 
+                    <span class="bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">Code Library</span>
+                </h1>
+                
+                <p class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-10 animate-fade-in" style="animation-delay: 0.2s">
+                    Submit and discover Google Drive links for your external projects. Built for speed, managed with precision.
+                </p>
+            </div>
 
-            <!-- Search Bar Container -->
+
             <div class="search-container animate-fade-in" style="animation-delay: 0.3s">
-                <div class="absolute inset-y-0 left-6 flex items-center pointer-events-none text-slate-500">
+                <div class="search-icon-wrapper">
                     <i data-lucide="search" class="w-6 h-6"></i>
                 </div>
                 <input 
@@ -115,51 +117,49 @@
             </div>
         </footer>
 
-        <!-- Upload Modal -->
-        <div id="upload-modal" class="fixed inset-0 z-[100] hidden overflow-y-auto">
-            <div class="flex items-center justify-center min-h-screen p-6">
-                <div class="fixed inset-0 modal-overlay" id="close-modal-overlay"></div>
-                
-                <div class="relative glass bg-navy-900 border border-white/10 rounded-[32px] w-full max-w-lg p-10 shadow-3xl transition-all scale-95 opacity-0" id="modal-container">
-                    <div class="flex items-center justify-between mb-10">
-                        <div>
-                            <h2 class="text-3xl font-outfit font-bold mb-1">Share Code</h2>
-                            <p class="text-slate-500">Provide a name and Google Drive link.</p>
-                        </div>
-                        <button id="close-upload-modal" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all">
-                            <i data-lucide="x" class="w-6 h-6"></i>
-                        </button>
+        <!-- Upload Modal (Refactored to Popover) -->
+        <div id="upload-modal" popover="auto" class="glass rounded-[32px]">
+            <div id="upload-modal-content">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <h2 class="text-4xl font-outfit font-extrabold mb-2 tracking-tight">Share Code</h2>
+                        <p class="text-slate-400 text-xs font-medium uppercase tracking-wider">Contribute a resource to the hub</p>
+                    </div>
+                    <button popovertarget="upload-modal" popovertargetaction="hide" class="modal-close-btn" title="Close">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <form id="upload-form" class="space-y-6">
+                    <div class="flex flex-col gap-2">
+                        <label for="external-name" class="modal-label font-bold uppercase tracking-[0.2em] px-1">Resource Name</label>
+                        <input 
+                            type="text" 
+                            id="external-name" 
+                            required 
+                            placeholder="e.g. System Design Docs"
+                            class="input-field"
+                        >
+                    </div>
+                    
+                    <div class="flex flex-col gap-2">
+                        <label for="drive-link" class="modal-label font-bold uppercase tracking-[0.2em] px-1">Google Drive URL</label>
+                        <input 
+                            type="url" 
+                            id="drive-link" 
+                            required 
+                            placeholder="https://drive.google.com/..."
+                            class="input-field"
+                        >
                     </div>
 
-                    <form id="upload-form" class="space-y-8">
-                        <div class="flex flex-col gap-2">
-                            <label for="external-name" class="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Resource Name</label>
-                            <input 
-                                type="text" 
-                                id="external-name" 
-                                required 
-                                placeholder="e.g. System Design Docs"
-                                class="input-field"
-                            >
-                        </div>
-                        
-                        <div class="flex flex-col gap-2">
-                            <label for="drive-link" class="text-xs font-bold text-slate-500 uppercase tracking-widest px-1">Google Drive URL</label>
-                            <input 
-                                type="url" 
-                                id="drive-link" 
-                                required 
-                                placeholder="https://drive.google.com/..."
-                                class="input-field"
-                            >
-                        </div>
-
-                        <button type="submit" id="submit-btn" class="w-full btn-primary h-14 justify-center text-lg shadow-amber-500/10">
+                    <div class="pt-half">
+                        <button type="submit" id="submit-btn" class="w-full btn-primary h-16 justify-center text-xl shadow-amber-500/10">
                             <span>Publish to Hub</span>
-                            <i data-lucide="plus-circle" class="w-5 h-5"></i>
+                            <i data-lucide="plus-circle" class="w-6 h-6"></i>
                         </button>
-                    </form>
-                </div>
+                    </div>
+                </form>
             </div>
         </div>
         

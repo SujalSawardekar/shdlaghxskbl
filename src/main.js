@@ -7,10 +7,6 @@ const loadingSkeleton = document.getElementById('loading-skeleton');
 const noResults = document.getElementById('no-results');
 const searchInput = document.getElementById('search-input');
 const uploadModal = document.getElementById('upload-modal');
-const modalContainer = document.getElementById('modal-container');
-const openUploadBtn = document.getElementById('open-upload-modal');
-const closeUploadBtn = document.getElementById('close-upload-modal');
-const closeModalOverlay = document.getElementById('close-modal-overlay');
 const uploadForm = document.getElementById('upload-form');
 const toast = document.getElementById('toast');
 const toastMessage = document.getElementById('toast-message');
@@ -188,7 +184,7 @@ async function handleUpload(e) {
         if (error) throw error;
 
         showToast('Published!', 'check');
-        toggleModal(false);
+        uploadModal.hidePopover();
         uploadForm.reset();
         
         if (data) {
@@ -217,24 +213,7 @@ function handleSearch(e) {
     }, 150);
 }
 
-// Modal Logic
-function toggleModal(show) {
-    if (show) {
-        uploadModal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden';
-        setTimeout(() => {
-            modalContainer.classList.add('show');
-            modalContainer.classList.remove('scale-95', 'opacity-0');
-        }, 10);
-    } else {
-        modalContainer.classList.remove('show');
-        modalContainer.classList.add('scale-95', 'opacity-0');
-        document.body.style.overflow = '';
-        setTimeout(() => {
-            uploadModal.classList.add('hidden');
-        }, 300);
-    }
-}
+
 
 // Toast Logic
 function showToast(message, iconName) {
@@ -260,9 +239,7 @@ function escapeHTML(str) {
 }
 
 // Event Listeners
-if (openUploadBtn) openUploadBtn.addEventListener('click', () => toggleModal(true));
-if (closeUploadBtn) closeUploadBtn.addEventListener('click', () => toggleModal(false));
-if (closeModalOverlay) closeModalOverlay.addEventListener('click', () => toggleModal(false));
+
 if (uploadForm) uploadForm.addEventListener('submit', handleUpload);
 if (searchInput) searchInput.addEventListener('input', handleSearch);
 
@@ -299,6 +276,31 @@ window.addEventListener('scroll', () => {
 });
 
 // Init
-initIcons();
-fetchExternals();
-setupRealtime();
+function init() {
+    initIcons();
+    fetchExternals();
+    setupRealtime();
+    
+    // Safety: Ensure popover is closed on load and hash is cleared
+    if (uploadModal) {
+        try {
+            uploadModal.hidePopover();
+            if (window.location.hash === '#upload-modal') {
+                history.replaceState(null, null, ' ');
+            }
+        } catch (e) {
+            // Fallback for non-supporting browsers
+            uploadModal.style.display = 'none';
+        }
+    }
+}
+
+// Global Close listener (extra safety)
+document.addEventListener('click', (e) => {
+    const closeBtn = e.target.closest('[popovertargetaction="hide"]');
+    if (closeBtn && uploadModal) {
+        uploadModal.hidePopover();
+    }
+});
+
+init();
