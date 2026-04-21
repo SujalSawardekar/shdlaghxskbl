@@ -281,26 +281,12 @@ function init() {
     fetchExternals();
     setupRealtime();
     
-    // Safety: Ensure popover is closed on load and hash is cleared
-    if (uploadModal) {
-        try {
-            uploadModal.hidePopover();
-            if (window.location.hash === '#upload-modal') {
-                history.replaceState(null, null, ' ');
-            }
-        } catch (e) {
-            // Fallback for non-supporting browsers
-            uploadModal.style.display = 'none';
-        }
+    // Ensure hash state doesn't interfere on load
+    if (window.location.hash === '#upload-modal') {
+        history.replaceState(null, null, ' ');
     }
 }
 
-// Global Close listener (extra safety)
-document.addEventListener('click', (e) => {
-    const closeBtn = e.target.closest('[popovertargetaction="hide"]');
-    if (closeBtn && uploadModal) {
-        uploadModal.hidePopover();
-    }
-});
+// No more redundant click listener
 
 init();
